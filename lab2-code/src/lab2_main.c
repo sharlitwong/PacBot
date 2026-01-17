@@ -58,7 +58,7 @@ int control_motors(char command, int speed, int ticks){
         change_duty(3, 0); //bottom
         change_duty(4, speed); //right
 
-    //phase directionq1 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1!!!!!!!!!!!!!!!!!~Q1  ~aaA //bottom
+    //phase directionq1 //bottom
         change_duty(4, speed); //right
         //directions
         set_pin(GPIOB, 0, 1); //J1 left backward
