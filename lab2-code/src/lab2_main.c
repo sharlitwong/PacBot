@@ -8,7 +8,7 @@
 #include "motor_control_file.h"
 
 int speed=0;
-char command=0;
+char command=0; 
 
 volatile uint32_t system_ticks = 0;
 
@@ -65,7 +65,7 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 1, 0); //J2 bottom not moving
         set_pin(GPIOB, 4, 0); //J3 top not moving
         set_pin(GPIOB, 5, 0); //J4 right backward
-    }else if(command == 'r'){ //right
+    }else if(command == 'l'){ //left
         //speed
         change_duty(1, speed); //top
         change_duty(2, 0); //left
@@ -76,7 +76,7 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 1, 1); //J2 bottom forward
         set_pin(GPIOB, 4, 1); //J3 top forward
         set_pin(GPIOB, 5, 1); //J4 right not moving
-    }else if(command == 'l'){ //left
+    }else if(command == 'r'){ //right
         //speed
         change_duty(1, speed); //top
         change_duty(2, 0); //left
@@ -88,8 +88,19 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 4, 0); //J3 top backward
        set_pin(GPIOB, 5, 0); //J4 right not moving
 
-    }else if(command == 's'){ //left
+    }else if(command == 'b'){ //back 
         //speed
+        change_duty(1, 0); //top
+        change_duty(2, speed); //left
+        change_duty(3, 0); //bottom
+        change_duty(4, speed); //right
+        //direction
+        set_pin(GPIOB, 0, 0); // J1 left not moving
+        set_pin(GPIOB, 1, 0); //J2 bottom backward
+        set_pin(GPIOB, 4, 0); //J3 top backward
+        set_pin(GPIOB, 5, 1); //J4 right not moving
+    }
+    else if (command == 's'){
         change_duty(1, 0); //top
         change_duty(2, 0); //left
         change_duty(3, 0); //bottom
@@ -100,19 +111,6 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 4, 0); //J3 top backward
         set_pin(GPIOB, 5, 1); //J4 right not moving
     }
-    else{
-        change_duty(1, 1); //top
-        change_duty(2, 1); //left
-        change_duty(3, 1); //bottom
-        change_duty(4, 1); //right
-        //direction
-        set_pin(GPIOB, 0, 1); // J1 left not moving
-        set_pin(GPIOB, 1, 0); //J2 bottom backward
-        set_pin(GPIOB, 4, 0); //J3 top backward
-        set_pin(GPIOB, 5, 1); //J4 right not moving
-    }
-
-
 }
 
 int main()
@@ -150,7 +148,7 @@ int main()
         serial_read(USART2);
         // TODO: CALL THIS FUNCTION WITH HOWEVER YOU WANT TO MODIFY IT
         //call control motors here based on the input from the buffer.
-        control_motors(command, 300,0);
+        control_motors(command, 1000,0);
 
         // serial_write(USART2,prompt);
         for(int i=0; i<100000;i++){
