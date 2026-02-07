@@ -11,6 +11,7 @@ int speed=0;
 char command=0; 
 
 volatile uint32_t system_ticks = 0;
+UART_HandleTypeDef huart1;
 
 // config the system time 
 void SysTick_Init(uint32_t tick_hz)
@@ -142,6 +143,15 @@ int main()
     //main loop
 
     for(;;){
+
+        // if (index >= 50) index = 0;
+	    // rx_buffer[index] = UART_read(&huart1);
+
+        // printf("Received: %s\n", rx_buffer[index]);
+        // index++;
+
+        // HAL_Delay(1000);
+
         speed=RXBUFFER2[1];
         command=RXBUFFER2[0];
         // serial_write(USART2, prompt);s
@@ -157,7 +167,7 @@ int main()
         // memcpy(prompt,(int*)(TIM1->CNT),strlen(prompt));
         // serial_write(USART2, prompt);
         
-    }
+        }
 
 }
 return 0;
