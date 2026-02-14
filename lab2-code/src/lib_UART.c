@@ -27,6 +27,7 @@ static void USART_Init (USART_TypeDef *USARTx, bool tx_en, bool rx_en,int baud);
 static void UART1_GPIO_Init(void);
 static void UART2_GPIO_Init(void);
 // static void USART_Delay(uint32_t us);
+char UART_read (USART_TypeDef * USARTx);
 
 // These used to be public functions, but are now replaced with the Arduino API.
 // They're now what the Arduino API is built out of, so they're static.
