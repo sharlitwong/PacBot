@@ -12,14 +12,12 @@ volatile int len_string2 = 0;
 volatile bool transmitting=false;
 int len=2;
 
-uint8_t RXBUFFER[BUFFER_SIZE];
+uint8_t RXBUFFER[BUFFER_SIZE]; //newly commented back in
 uint8_t TXBUFFER[BUFFER_SIZE];
 uint8_t RXBUFFER2[BUFFER_SIZE];
 uint8_t TXBUFFER2[BUFFER_SIZE];
 
 int SerialReadLen = 2;
-
-
 
 int number=0;
 
@@ -104,7 +102,9 @@ void UART1_Init (int baud) {
 
 // Like UART2_GPIO_Init, but just use PA9 in AF7 mode as the Tx data.
 static void UART1_GPIO_Init(void) {
-    set_gpio_alt_func (GPIOB,  6, 7);
+    //set_gpio_alt_func (GPIOA,  9, 7); //origially were configuring d4 and d5, now they're d0 and d1
+    //set_gpio_alt_func (GPIOA,  10, 7);
+    set_gpio_alt_func (GPIOB,  6, 7); //origially were configuring d4 and d5, now they're d0 and d1
     set_gpio_alt_func (GPIOB,  7, 7);
 
     // Set PA9 to very-high-speed. This changes the output slew rate.
@@ -278,11 +278,10 @@ void USART1_IRQHandler(void)
     if (USART1->ISR & USART_ISR_RXNE)  //data in it
     {
         RXBUFFER[rx_int++] = USART1->RDR;  //read data from rdr reg
-        rx_int=rx_int%2;
+        rx_int=rx_int%8; //was originally mod 2
 
     }
 }
-
 
 void USART2_IRQHandler(void)
 {

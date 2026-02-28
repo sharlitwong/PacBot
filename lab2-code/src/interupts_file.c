@@ -35,7 +35,6 @@ volatile int enc_ticks3=0;
 volatile int previous_state_enc4=0;
 volatile int enc_ticks4=0;
 
-
 //essentially enables an input pin
 
 int enable_input_pin(GPIO_TypeDef *GPIOX,int pin){
@@ -54,11 +53,9 @@ int enable_input_pin(GPIO_TypeDef *GPIOX,int pin){
     return 0;
 }
 
-
-
 //this will enable the pins  to be set up for interupts.
 //the pins that are enabled are A7,A6,A5,A4,A3,A1,A0,A12
-int enable_input_and_intetupts(){
+int enable_input_and_interrupts(){
     //enable all the pins
     enable_input_pin(GPIOA,7);
     enable_input_pin(GPIOA,6);

@@ -27,8 +27,7 @@ void clock_setup_16MHz(void) {
 
     // Wait until HSI has settled down after turnon. We know this by checking
     // another bit in RCC->CR.
-    while ( (RCC->CR & (uint32_t) RCC_CR_HSIRDY) == 0 )
-	;
+    while ( (RCC->CR & (uint32_t) RCC_CR_HSIRDY) == 0 );
 
     // Select line on the main SYSCLK mux, choosing between HSE, MSI, HSI16 and
     // a frequency-multiplied PLL to drive SYSCLK.
@@ -39,8 +38,7 @@ void clock_setup_16MHz(void) {
 
     // Wait till the mux select has actually happened. My guess is there are a
     // few dead cycles to avoid runt clock pulses.
-    while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) == 0 )
-  	;
+    while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) == 0 );
 
     // Update the software global variable to talk with other API funcs.
     SystemCoreClock = 16000000;
@@ -76,8 +74,7 @@ void clock_setup_80MHz(void){
 
     // Wait until HSI has settled down after turnon. We know this by checking
     // another bit in RCC->CR.
-    while((RCC->CR & RCC_CR_HSIRDY) == 0)
-	;
+    while((RCC->CR & RCC_CR_HSIRDY) == 0);
 
     // Internal Clock Sources Calibration Register (ICSCR).
     // This 32-bit register has 16 bits each for the HSI and MSI clocks. For
@@ -93,8 +90,7 @@ void clock_setup_80MHz(void){
     RCC->CR    &= ~RCC_CR_PLLON; 
 
     // Wait for it to lock. Not sure why this is needed, since it's off!
-    while((RCC->CR & RCC_CR_PLLRDY) == RCC_CR_PLLRDY)
-	;
+    while((RCC->CR & RCC_CR_PLLRDY) == RCC_CR_PLLRDY);
 
     // Now that the PLL is off, let's configure it.
     // First, select clock source to PLL. The reset value is no clock at all.
@@ -118,8 +114,7 @@ void clock_setup_80MHz(void){
     RCC->CR   |= RCC_CR_PLLON; 
 
     // And wait for it to lock.
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
-	;
+    while((RCC->CR & RCC_CR_PLLRDY) == 0);
 
     // Select line on the main SYSCLK mux, choosing between HSE, MSI, HSI16 and
     // a frequency-multiplied PLL to drive SYSCLK. We haven't touched it so far,
@@ -129,8 +124,7 @@ void clock_setup_80MHz(void){
     RCC->CFGR |= RCC_CFGR_SW_PLL; // ...set to the PLL.
 
     // Wait until the mux has switched
-    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
-	;
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
 	
     // Set the AHB, APB1 and APB2 clock prescalers all to x1 (which is their
     // reset default anyway).
@@ -144,8 +138,7 @@ void clock_setup_80MHz(void){
     // Turn off the SA1 PLL
     RCC->CR &= ~RCC_CR_PLLSAI1ON;
     // Then wait for it to actually be off.
-    while ( (RCC->CR & RCC_CR_PLLSAI1ON) == RCC_CR_PLLSAI1ON )
-	;
+    while ( (RCC->CR & RCC_CR_PLLSAI1ON) == RCC_CR_PLLSAI1ON );
 
     // SA1 VCO freq = PLL-in-freq * N/M = 16 MHz * 24/2 = 192 MHz
     // We already set the PLL-in-freq=16Mh and M=2 above, for the main PLL.
@@ -174,8 +167,7 @@ void clock_setup_80MHz(void){
     // Turn on the SA1 PLL
     RCC->CR |= RCC_CR_PLLSAI1ON;  // SAI1 PLL enable
     // Then wait for it to actually be on.
-    while ( (RCC->CR & RCC_CR_PLLSAI1ON) == 0)
-	;
+    while ( (RCC->CR & RCC_CR_PLLSAI1ON) == 0);
 
     // Swing the final mux to drive the SA1 clock. It can come from
     // the SAI1 PLL P output, the SAI2 PLL P output, the main-PLL P output
