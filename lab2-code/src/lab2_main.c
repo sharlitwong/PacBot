@@ -53,8 +53,8 @@ uint64_t cur_time_ms(void){
 // extern volatile int enc_ticks4;
 int control_motors(char command, int speed, int ticks){
     char buffer[100]; // Declare a character array to store the formatted string
-    sprintf(buffer,"current command was %c \n", command);
-    serial_write(USART2, buffer);
+    //sprintf(buffer,"current command was %c \n", command);
+    //serial_write(USART2, buffer);
     if(command == 'f'){ //forward
         //enable speed
         change_duty(1, 0); //top
@@ -152,21 +152,28 @@ int main()
         // serial_write(USART2, msg);
 
         // speed=RXBUFFER2[1];
-        command=RXBUFFER2[0];
-        // serial_write(USART2, prompt);s
+        //command=RXBUFFER2[0]; 
+        //command = RXBUFFER[0];
+        char direction = (RXBUFFER[0]); //first byte is character command
+        //int speed = (RXBUFFER[0] );
+        uint16_t spd = (RXBUFFER[1] << 8) | RXBUFFER[2]; //2nd and 3rd byte are speed
+        int speed = (int)spd;
+        // serial_write(USART2, prompt);
         //serial_read(USART2);
+
+        control_motors(direction, speed, 0);
 
         // Data is already in RXBUFFER from the interrupt!
         //tof_distance = (RXBUFFER[0] << 8) | RXBUFFER[1];  // Read MSB and LSB
-        uint16_t tof_front = (RXBUFFER[0] << 8) | RXBUFFER[1];
-        uint16_t tof_back  = (RXBUFFER[2] << 8) | RXBUFFER[3];
-        uint16_t tof_left  = (RXBUFFER[4] << 8) | RXBUFFER[5];
-        uint16_t tof_right = (RXBUFFER[6] << 8) | RXBUFFER[7];
+        // uint16_t tof_front = (RXBUFFER[0] << 8) | RXBUFFER[1];
+        // uint16_t tof_back  = (RXBUFFER[2] << 8) | RXBUFFER[3];
+        // uint16_t tof_left  = (RXBUFFER[4] << 8) | RXBUFFER[5];
+        // uint16_t tof_right = (RXBUFFER[6] << 8) | RXBUFFER[7];
         
         // Check if close
         //close = (tof_distance < 50);
         
-        // Control motors based on distance
+        //Control motors based on distance
         // if (command == 'f' && tof_front < 50) {
         //     control_motors('s', 0, 0);
         // } else if (command == 'b' && tof_back < 50) {
@@ -178,14 +185,15 @@ int main()
         // } else {
         //     control_motors(command, 1000, 0);
         // }
-
+    
 
         // serial_write(USART2, RXBUFFER);
         
         // Debug: print all sensor readings and current command
         char debug[150];
         // sprintf(debug, "CMD:%c F:%u B:%u L:%u R:%u\n", command, tof_front, tof_back, tof_left, tof_right);
-        sprintf(debug, "F:%u B:%u L:%u R:%u\n", tof_front, tof_back, tof_left, tof_right);
+        //sprintf(debug, "F:%u B:%u L:%u R:%u\n", tof_front, tof_back, tof_left, tof_right);
+        sprintf(debug, "CMD:%c SPD:%d RAW:[%02X %02X %02X]\n", direction, speed, RXBUFFER[0], RXBUFFER[1], RXBUFFER[2]);
         serial_write(USART2, debug);
 
         // char debug[150];
