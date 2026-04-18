@@ -42,10 +42,10 @@ int control_motors(int16_t front, int16_t right, int16_t back, int16_t left) {
     char buffer[100]; // Declare a character array to store the formatted string
     //positive = clockwise
     bool dir[4] = {}; //1 = counterclockwise, 0 = clockwise
-    dir[0] = (front < 0); //will be 1 if negative, meaning counterclockwise
-    dir[1] = (right < 0);
-    dir[2] = (back < 0);
-    dir[3] = (left < 0);
+    dir[0] = (front <= 0); //will be 1 if negative, meaning counterclockwise
+    dir[1] = (right <= 0);
+    dir[2] = (back <= 0);
+    dir[3] = (left <= 0);
 
     int spd[4] = {}; //our change_duty function can only take in values 0-1000
     spd[0] = (abs(front) * 1000) / 32767;
@@ -63,10 +63,10 @@ int control_motors(int16_t front, int16_t right, int16_t back, int16_t left) {
     set_pin(GPIOB, 5, !dir[1]); //J4 right
     //0 = clockwise for this motor
     //right motor speed
-    change_duty(4, spd[1] + 1000); //right
+    change_duty(4, spd[1]); //right
 
     //BACK motor direction
-    set_pin(GPIOB, 1, !dir[2]); //J2 bottom
+    set_pin(GPIOB, 1, dir[2]); //J2 bottom
     //0 = clockwise for this motor
     //back motor speed
     change_duty(3, spd[2]); //bottom
@@ -74,7 +74,7 @@ int control_motors(int16_t front, int16_t right, int16_t back, int16_t left) {
     //LEFT motor direction
     set_pin(GPIOB, 0, dir[3]); //J1 left 
     //left motor speed
-    change_duty(2, spd[3] + 1000); //left
+    change_duty(2, spd[3]); //left
 }
 
 int main() {
@@ -114,6 +114,12 @@ int main() {
         
         // Debug: print all received motor commands from raspberry pi
         char debug[150];
+        // sprintf(debug, "raw: %02X %02X %02X %02X %02X %02X %02X %02X\n",
+        // RXBUFFER[0], RXBUFFER[1], RXBUFFER[2], RXBUFFER[3],
+        // RXBUFFER[4], RXBUFFER[5], RXBUFFER[6], RXBUFFER[7]);
+        // serial_write(USART2, debug);
+
+        sprintf(debug, "front: %d right: %d back: %d left: %d", spd_f, spd_r, spd_b, spd_l);
         sprintf(debug, "front: %d right: %d back: %d left: %d", spd_f, spd_r, spd_b, spd_l);
         serial_write(USART2, debug);
 
